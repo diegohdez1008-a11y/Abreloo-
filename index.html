@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f8d85a">
+  <title>Para mi niña 💛</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 50% 25%, rgba(255,255,255,.42), transparent 32%),
+        linear-gradient(145deg, #f7d85b, #f4ca43);
+      color: #5a4311;
+    }
+
+    .card {
+      width: min(88vw, 390px);
+      min-height: 590px;
+      padding: 34px 22px 28px;
+      border-radius: 30px;
+      background: rgba(255, 248, 205, .38);
+      border: 1px solid rgba(255,255,255,.45);
+      box-shadow: 0 18px 50px rgba(117, 82, 8, .16);
+      backdrop-filter: blur(8px);
+      text-align: center;
+      position: relative;
+    }
+
+    .tiny {
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      opacity: .62;
+      margin-bottom: 4px;
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      font-size: 25px;
+      font-weight: 700;
+    }
+
+    .flowers {
+      width: 235px;
+      height: 260px;
+      object-fit: contain;
+      display: block;
+      margin: 2px auto -12px;
+      filter: drop-shadow(0 9px 10px rgba(102, 72, 5, .13));
+    }
+
+    .snoopy-wrap {
+      position: relative;
+      width: 105px;
+      height: 105px;
+      margin: -3px auto 12px;
+      cursor: pointer;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform .18s ease;
+    }
+
+    .snoopy-wrap:active { transform: scale(.93); }
+
+    .snoopy {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 7px 8px rgba(80, 55, 0, .15));
+    }
+
+    .heart {
+      position: absolute;
+      right: -3px;
+      top: 0;
+      font-size: 31px;
+      animation: float 2.2s ease-in-out infinite;
+    }
+
+    .hint {
+      font-size: 12px;
+      opacity: .62;
+      margin: 0 0 13px;
+    }
+
+    .message {
+      margin: 0 auto;
+      max-width: 320px;
+      font-size: 15px;
+      line-height: 1.55;
+      font-weight: 500;
+    }
+
+    .note {
+      margin-top: 15px;
+      font-size: 11px;
+      opacity: .48;
+    }
+
+    @keyframes float {
+      0%,100% { transform: translateY(0) rotate(-4deg); }
+      50% { transform: translateY(-7px) rotate(5deg); }
+    }
+
+    .playing .heart {
+      animation: beat .55s ease-in-out infinite alternate;
+    }
+
+    @keyframes beat {
+      to { transform: scale(1.18); }
+    }
+
+    .spark {
+      position: fixed;
+      pointer-events: none;
+      font-size: 16px;
+      animation: rise 900ms ease-out forwards;
+    }
+
+    @keyframes rise {
+      from { opacity: 1; transform: translate(0,0) scale(.8); }
+      to { opacity: 0; transform: translate(var(--x), -85px) scale(1.25); }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="card" id="card">
+    <div class="tiny">para ti 💛</div>
+    <h1>Mi niña</h1>
+
+    <!-- Pon aquí tu imagen de flores y llámala "flores.png" -->
+    <img class="flowers" src="flores.png" alt="Flores amarillas">
+
+    <!-- Pon aquí una imagen PNG transparente de Snoopy y llámala "snoopy.png" -->
+    <div class="snoopy-wrap" id="snoopyButton" aria-label="Tocar canción">
+      <img class="snoopy" src="snoopy.png" alt="Snoopy con un corazón amarillo">
+      <span class="heart">💛</span>
+    </div>
+
+    <p class="hint">toca a Snoopy 🎵</p>
+
+    <p class="message">
+      Mi niña sé que no puedo verte y darte unas flores,
+      pero no quiero que este día seas espectadora.
+      <br><br>
+      Te amo mucho 💛
+    </p>
+
+    <div class="note">hecho especialmente para ti</div>
+  </main>
+
+  <!-- Sube tu canción a GitHub con este nombre: "amor.mp3" -->
+  <audio id="song" src="amor.mp3" preload="auto"></audio>
+
+  <script>
+    const button = document.getElementById("snoopyButton");
+    const song = document.getElementById("song");
+    const card = document.getElementById("card");
+
+    button.addEventListener("click", async () => {
+      try {
+        if (song.paused) {
+          await song.play();
+          card.classList.add("playing");
+          button.setAttribute("aria-label", "Pausar canción");
+        } else {
+          song.pause();
+          card.classList.remove("playing");
+          button.setAttribute("aria-label", "Reproducir canción");
+        }
+
+        for (let i = 0; i < 4; i++) {
+          const s = document.createElement("span");
+          s.className = "spark";
+          s.textContent = i % 2 ? "💛" : "✨";
+          s.style.left = (button.getBoundingClientRect().left + 35 + Math.random()*35) + "px";
+          s.style.top = (button.getBoundingClientRect().top + 35) + "px";
+          s.style.setProperty("--x", ((Math.random()-.5)*70) + "px");
+          document.body.appendChild(s);
+          setTimeout(() => s.remove(), 900);
+        }
+      } catch (e) {
+        alert("Sube el archivo amor.mp3 a la misma carpeta que index.html 💛");
+      }
+    });
+
+    song.addEventListener("ended", () => card.classList.remove("playing"));
+  </script>
+</body>
+</html>
